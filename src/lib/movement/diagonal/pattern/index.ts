@@ -24,12 +24,9 @@ export class DiagonalMovementPattern {
 	}
 
 	computeAllPossibleMovesFrom(fromPosition: Position): Position[] {
-		console.log(this.allowedDirections);
-		const r = this.allowedDirections.flatMap((direction) =>
+		return this.allowedDirections.flatMap((direction) =>
 			this.computeAllPossibleDiagonalMovesTowards(direction, fromPosition)
 		);
-
-		return r;
 	}
 
 	computeAllPossibleDiagonalMovesTowards(
