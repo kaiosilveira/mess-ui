@@ -13,7 +13,21 @@ export abstract class AbstractMovementPattern {
 			[MovementDirection.RIGHT]: BOARD_BOUNDARY - from.x,
 			[MovementDirection.LEFT]: from.x,
 			[MovementDirection.DOWN]: from.y,
-			[MovementDirection.UP]: BOARD_BOUNDARY - from.y
+			[MovementDirection.UP]: BOARD_BOUNDARY - from.y,
+			[MovementDirection.L_SHAPED_DOWN_LEFT]: Math.min(from.x, from.y),
+			[MovementDirection.L_SHAPED_DOWN_RIGHT]: Math.min(BOARD_BOUNDARY - from.x, from.y),
+			[MovementDirection.L_SHAPED_UP_LEFT]: Math.min(from.x, BOARD_BOUNDARY - from.y),
+			[MovementDirection.L_SHAPED_LEFT_UP]: Math.min(from.x, BOARD_BOUNDARY - from.y),
+			[MovementDirection.L_SHAPED_LEFT_DOWN]: Math.min(from.x, from.y),
+			[MovementDirection.L_SHAPED_RIGHT_DOWN]: Math.min(BOARD_BOUNDARY - from.x, from.y),
+			[MovementDirection.L_SHAPED_UP_RIGHT]: Math.min(
+				BOARD_BOUNDARY - from.x,
+				BOARD_BOUNDARY - from.y
+			),
+			[MovementDirection.L_SHAPED_RIGHT_UP]: Math.min(
+				BOARD_BOUNDARY - from.x,
+				BOARD_BOUNDARY - from.y
+			)
 		};
 	}
 }
