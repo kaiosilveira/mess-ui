@@ -5,17 +5,21 @@ import { calculateVerticalMove } from '../calculator';
 
 export class VerticalMovementPattern extends AbstractMovementPattern {
 	private readonly distancePolicy: MovementUnitsPolicy;
+	private readonly allowedDirections: MovementDirection[];
 
-	constructor(deps: { distancePolicy: MovementUnitsPolicy }) {
+	constructor(deps: {
+		distancePolicy: MovementUnitsPolicy;
+		allowedDirections: MovementDirection[];
+	}) {
 		super();
 		this.distancePolicy = deps.distancePolicy;
+		this.allowedDirections = deps.allowedDirections;
 	}
 
 	computeAllPossibleMovesFrom(fromPosition: Position): Position[] {
-		return [
-			...this.computeAllPossibleMovesTowards(MovementDirection.UP, fromPosition),
-			...this.computeAllPossibleMovesTowards(MovementDirection.DOWN, fromPosition)
-		];
+		return this.allowedDirections.flatMap((direction) =>
+			this.computeAllPossibleMovesTowards(direction, fromPosition)
+		);
 	}
 
 	private computeAllPossibleMovesTowards(

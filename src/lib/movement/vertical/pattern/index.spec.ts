@@ -1,4 +1,4 @@
-import { MovementUnitsPolicy } from '$lib/movement';
+import { MovementDirection, MovementUnitsPolicy } from '$lib/movement';
 import { describe, it, expect } from 'vitest';
 import { VerticalMovementPattern } from '.';
 
@@ -27,7 +27,8 @@ describe('VerticalMovementPattern', () => {
     */
 
 		const rookLikeVerticalMovePattern = new VerticalMovementPattern({
-			distancePolicy: MovementUnitsPolicy.UP_TO_BOUNDARY
+			distancePolicy: MovementUnitsPolicy.UP_TO_BOUNDARY,
+      allowedDirections: [MovementDirection.UP, MovementDirection.DOWN]
 		});
 
 		const fromPosition = { x: 2, y: 3 };
@@ -67,7 +68,8 @@ describe('VerticalMovementPattern', () => {
     */
 
 		const kingLikeVerticalMovePattern = new VerticalMovementPattern({
-			distancePolicy: MovementUnitsPolicy.ONE
+			distancePolicy: MovementUnitsPolicy.ONE,
+			allowedDirections: [MovementDirection.UP, MovementDirection.DOWN]
 		});
 
 		const fromPosition = { x: 4, y: 3 };
@@ -76,5 +78,41 @@ describe('VerticalMovementPattern', () => {
 		expect(possibleMoves).toHaveLength(2);
 		expect(possibleMoves).toContainEqual({ x: 4, y: 4 });
 		expect(possibleMoves).toContainEqual({ x: 4, y: 2 });
+	});
+
+	it('should consider direction restrictions', () => {
+		/*
+        |---|---|---|---|---|---|---|---|
+      7	|   |   |   |   |   |   |   |   |
+        |---|---|---|---|---|---|---|---|
+      6	|   |   |   |   |   |   |   |   |
+        |---|---|---|---|---|---|---|---|
+      5	|   |   |   |   |   |   |   |   |
+        |---|---|---|---|---|---|---|---|
+      4	|   |   |   |   |   |   |   |   |
+        |---|---|---|---|---|---|---|---|
+      3	|   | x |   |   |   |   |   |   |
+        |---|---|---|---|---|---|---|---|
+      2	|   | x |   |   |   |   |   |   |
+        |---|---|---|---|---|---|---|---|
+      1	|   | P |   |   |   |   |   |   |
+        |---|---|---|---|---|---|---|---|
+      0	|   |   |   |   |   |   |   |   |
+        |---|---|---|---|---|---|---|---|
+        | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+        |---|---|---|---|---|---|---|---|
+    */
+
+		const kingLikeVerticalMovePattern = new VerticalMovementPattern({
+			distancePolicy: MovementUnitsPolicy.TWO,
+			allowedDirections: [MovementDirection.UP]
+		});
+
+		const fromPosition = { x: 1, y: 1 };
+		const possibleMoves = kingLikeVerticalMovePattern.computeAllPossibleMovesFrom(fromPosition);
+
+		expect(possibleMoves).toHaveLength(2);
+		expect(possibleMoves).toContainEqual({ x: 1, y: 2 });
+		expect(possibleMoves).toContainEqual({ x: 1, y: 3 });
 	});
 });
