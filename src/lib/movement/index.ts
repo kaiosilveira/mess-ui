@@ -4,7 +4,9 @@ export enum MovementDirection {
 	UP_LEFT = 'UP_LEFT',
 	DOWN_LEFT = 'DOWN_LEFT',
 	RIGHT = 'RIGHT',
-	LEFT = 'LEFT'
+	LEFT = 'LEFT',
+	DOWN = 'DOWN',
+	UP = 'UP'
 }
 
 export enum MovementUnitsPolicy {
