@@ -1,33 +1,24 @@
-import { BOARD_BOUNDARY, type Position } from '$lib/pieces';
+import { AbstractMovementPattern } from '$lib/movement/base/pattern';
+import { type Position } from '$lib/pieces';
 import { MovementDirection, MovementUnitsPolicy } from '../..';
 import { calculateHorizontalMove } from '../calculator';
 
-export class HorizontalMovementPattern {
+export class HorizontalMovementPattern extends AbstractMovementPattern {
 	private readonly distancePolicy: MovementUnitsPolicy;
 
 	constructor(deps: { distancePolicy: MovementUnitsPolicy }) {
+		super();
 		this.distancePolicy = deps.distancePolicy;
-	}
-
-	getDistancesFromBoundary(from: Position): Record<MovementDirection, number> {
-		return {
-			[MovementDirection.DOWN_RIGHT]: Math.min(BOARD_BOUNDARY - from.x, from.y),
-			[MovementDirection.UP_LEFT]: Math.min(from.x, BOARD_BOUNDARY - from.y),
-			[MovementDirection.DOWN_LEFT]: Math.min(from.x, from.y),
-			[MovementDirection.UP_RIGHT]: Math.min(BOARD_BOUNDARY - from.x, BOARD_BOUNDARY - from.y),
-			[MovementDirection.RIGHT]: BOARD_BOUNDARY - from.x,
-			[MovementDirection.LEFT]: from.x
-		};
 	}
 
 	computeAllPossibleMovesFrom(fromPosition: Position): Position[] {
 		return [
-			...this.computeAllPossibleHorizontalMovesTowards(MovementDirection.RIGHT, fromPosition),
-			...this.computeAllPossibleHorizontalMovesTowards(MovementDirection.LEFT, fromPosition)
+			...this.computeAllPossibleMovesTowards(MovementDirection.RIGHT, fromPosition),
+			...this.computeAllPossibleMovesTowards(MovementDirection.LEFT, fromPosition)
 		];
 	}
 
-	computeAllPossibleHorizontalMovesTowards(
+	private computeAllPossibleMovesTowards(
 		direction: MovementDirection,
 		fromPosition: Position
 	): Position[] {
