@@ -19,7 +19,9 @@ export class DiagonalMovementPattern {
 			[MovementDirection.DOWN_RIGHT]: Math.min(BOARD_BOUNDARY - from.x, from.y),
 			[MovementDirection.UP_LEFT]: Math.min(from.x, BOARD_BOUNDARY - from.y),
 			[MovementDirection.DOWN_LEFT]: Math.min(from.x, from.y),
-			[MovementDirection.UP_RIGHT]: Math.min(BOARD_BOUNDARY - from.x, BOARD_BOUNDARY - from.y)
+			[MovementDirection.UP_RIGHT]: Math.min(BOARD_BOUNDARY - from.x, BOARD_BOUNDARY - from.y),
+			[MovementDirection.RIGHT]: BOARD_BOUNDARY - from.x,
+			[MovementDirection.LEFT]: from.x
 		};
 	}
 

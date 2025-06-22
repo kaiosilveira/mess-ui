@@ -12,7 +12,13 @@ export const calculateHorizontalMove = (args: {
 		`Calculating horizontal move from ${JSON.stringify(position)} towards ${direction} ${units} units`
 	);
 
-	const resultingX = position.x + units;
+	const dX = (() => {
+		if (direction === MovementDirection.RIGHT) return units;
+		else if (direction === MovementDirection.LEFT) return -units;
+		else throw new Error('Invalid movement direction');
+	})();
+
+	const resultingX = position.x + dX;
 
 	const overflowsX = resultingX < 0 || resultingX > BOARD_BOUNDARY;
 	const resultOutOfBounds = overflowsX;

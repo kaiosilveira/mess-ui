@@ -36,4 +36,20 @@ describe('calculateHorizontalMove', () => {
 
 		expect(newPosition).toEqual({ x: 2, y: 0 });
 	});
+
+	it('should move horizontally 1 unit towards the left', () => {
+		const piece: ChessPiece = { position: { x: 2, y: 0 }, possibleMoves: [] };
+		const towards = MovementDirection.LEFT;
+		const newPosition = calculateHorizontalMove({ from: piece.position, towards, units: 1 });
+
+		expect(newPosition).toEqual({ x: 1, y: 0 });
+	});
+
+	it('should move horizontally 2 units towards the left', () => {
+		const piece: ChessPiece = { position: { x: 2, y: 0 }, possibleMoves: [] };
+		const towards = MovementDirection.LEFT;
+		const newPosition = calculateHorizontalMove({ from: piece.position, towards, units: 2 });
+
+		expect(newPosition).toEqual({ x: 0, y: 0 });
+	});
 });
