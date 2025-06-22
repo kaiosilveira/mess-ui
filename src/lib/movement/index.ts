@@ -9,6 +9,7 @@ export enum MovementDirection {
 
 export enum MovementUnitsPolicy {
 	ONE = 'one',
+	TWO = 'two',
 	UP_TO_BOUNDARY = 'up_to_boundary'
 }
 
