@@ -1,34 +1,6 @@
-import { DiagonalMovementPattern } from '$lib/movement/diagonal/pattern';
-import { VerticalMovementPattern } from '$lib/movement/vertical/pattern';
 import { describe, it, expect } from 'vitest';
-import { AbstractChessPiece, type Position } from '..';
-import { MovementDirection, MovementUnitsPolicy } from '$lib/movement';
-
-export class Pawn extends AbstractChessPiece {
-	private diagonalMover: DiagonalMovementPattern;
-	private verticalMover: VerticalMovementPattern;
-
-	constructor(deps: { position: Position }) {
-		super(deps);
-
-		this.diagonalMover = new DiagonalMovementPattern({
-			allowedDirections: [MovementDirection.UP_LEFT, MovementDirection.UP_RIGHT],
-			distancePolicy: MovementUnitsPolicy.ONE
-		});
-
-		this.verticalMover = new VerticalMovementPattern({
-			distancePolicy: MovementUnitsPolicy.TWO,
-			allowedDirections: [MovementDirection.UP]
-		});
-	}
-
-	calculatePossibleMoves(): Position[] {
-		return [
-			...this.diagonalMover.computeAllPossibleMovesFrom(this.position),
-			...this.verticalMover.computeAllPossibleMovesFrom(this.position)
-		];
-	}
-}
+import { type Position } from '..';
+import { Pawn } from '.';
 
 describe('Pawn', () => {
 	describe('calculatePossibleMoves', () => {
