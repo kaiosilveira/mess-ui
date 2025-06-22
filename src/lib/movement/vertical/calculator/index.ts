@@ -28,5 +28,7 @@ export const calculateVerticalMove = (args: {
 		);
 	}
 
-	return { x: position.x, y: resultingY };
+	const result = { x: position.x, y: resultingY };
+	console.debug(`Resulting position after vertical move: (${JSON.stringify(result)})`);
+	return result;
 };

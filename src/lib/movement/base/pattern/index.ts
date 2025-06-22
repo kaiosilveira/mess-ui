@@ -12,8 +12,8 @@ export abstract class AbstractMovementPattern {
 			[MovementDirection.UP_RIGHT]: Math.min(BOARD_BOUNDARY - from.x, BOARD_BOUNDARY - from.y),
 			[MovementDirection.RIGHT]: BOARD_BOUNDARY - from.x,
 			[MovementDirection.LEFT]: from.x,
-			[MovementDirection.DOWN]: BOARD_BOUNDARY - from.y,
-			[MovementDirection.UP]: from.y
+			[MovementDirection.DOWN]: from.y,
+			[MovementDirection.UP]: BOARD_BOUNDARY - from.y
 		};
 	}
 }
