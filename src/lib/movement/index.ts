@@ -4,3 +4,8 @@ export enum MovementDirection {
 	UP_LEFT = 'UP_LEFT',
 	DOWN_LEFT = 'DOWN_LEFT'
 }
+
+export interface DeltaVector {
+	x: number;
+	y: number;
+}

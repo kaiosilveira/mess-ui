@@ -1,17 +1,12 @@
-import { BOARD_BOUNDARY, type ChessPiece } from '$lib/pieces';
-import { MovementDirection } from '..';
-
-export interface DeltaVector {
-	x: number;
-	y: number;
-}
+import { MovementDirection, type DeltaVector } from '$lib/movement';
+import { type Position, BOARD_BOUNDARY } from '$lib/pieces';
 
 export const calculateDiagonalMove = (args: {
-	piece: ChessPiece;
+	from: Position;
 	units: number;
 	towards: MovementDirection;
-}): [number, number] => {
-	const { piece, units, towards: direction } = args;
+}): Position => {
+	const { from: position, units, towards: direction } = args;
 
 	const deltaVector: DeltaVector = (() => {
 		switch (direction) {
@@ -28,8 +23,8 @@ export const calculateDiagonalMove = (args: {
 		}
 	})();
 
-	const [x, y] = piece.position;
-	const [resultingX, resultingY] = [x + deltaVector.x, y + deltaVector.y];
+	const { x, y } = position;
+	const { x: resultingX, y: resultingY } = { x: x + deltaVector.x, y: y + deltaVector.y };
 
 	const overflowsX = resultingX < 0 || resultingX > BOARD_BOUNDARY;
 	const overflowsY = resultingY < 0 || resultingY > BOARD_BOUNDARY;
@@ -41,5 +36,5 @@ export const calculateDiagonalMove = (args: {
 		);
 	}
 
-	return [resultingX, resultingY];
+	return { x: resultingX, y: resultingY };
 };
