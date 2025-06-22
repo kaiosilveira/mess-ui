@@ -26,12 +26,12 @@ describe('VerticalMovementPattern', () => {
         |---|---|---|---|---|---|---|---|
     */
 
-		const rookLikeHorizontalMovePattern = new VerticalMovementPattern({
+		const rookLikeVerticalMovePattern = new VerticalMovementPattern({
 			distancePolicy: MovementUnitsPolicy.UP_TO_BOUNDARY
 		});
 
 		const fromPosition = { x: 2, y: 3 };
-		const possibleMoves = rookLikeHorizontalMovePattern.computeAllPossibleMovesFrom(fromPosition);
+		const possibleMoves = rookLikeVerticalMovePattern.computeAllPossibleMovesFrom(fromPosition);
 
 		expect(possibleMoves).toHaveLength(7);
 		expect(possibleMoves).toContainEqual({ x: 2, y: 4 });
@@ -66,12 +66,12 @@ describe('VerticalMovementPattern', () => {
         |---|---|---|---|---|---|---|---|
     */
 
-		const kingLikeHorizontalMovePattern = new VerticalMovementPattern({
+		const kingLikeVerticalMovePattern = new VerticalMovementPattern({
 			distancePolicy: MovementUnitsPolicy.ONE
 		});
 
 		const fromPosition = { x: 4, y: 3 };
-		const possibleMoves = kingLikeHorizontalMovePattern.computeAllPossibleMovesFrom(fromPosition);
+		const possibleMoves = kingLikeVerticalMovePattern.computeAllPossibleMovesFrom(fromPosition);
 
 		expect(possibleMoves).toHaveLength(2);
 		expect(possibleMoves).toContainEqual({ x: 4, y: 4 });
