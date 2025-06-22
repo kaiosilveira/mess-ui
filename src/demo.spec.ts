@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 
 const BOARD_BOUNDARY = 7;
-interface Piece {
+interface ChessPiece {
 	position: [number, number];
 	get possibleMoves(): [number, number][];
 }
@@ -19,7 +19,7 @@ enum MovementDirection {
 }
 
 const moveDiagonally = (args: {
-	piece: Piece;
+	piece: ChessPiece;
 	units: number;
 	towards: MovementDirection;
 }): [number, number] => {
@@ -56,11 +56,13 @@ const moveDiagonally = (args: {
 	return [resultingX, resultingY];
 };
 
-class Bishop implements Piece {
+abstract class AbstractChessPiece implements ChessPiece {
 	position: [number, number];
 	constructor(deps: { position: [number, number] }) {
 		this.position = deps.position;
 	}
+
+	abstract get possibleMoves(): [number, number][];
 
 	get distancesFromBoundary(): Record<MovementDirection, number> {
 		const result = {
@@ -81,17 +83,23 @@ class Bishop implements Piece {
 
 		return result;
 	}
+}
+
+class Bishop extends AbstractChessPiece {
+	constructor(deps: { position: [number, number] }) {
+		super(deps);
+	}
 
 	get possibleMoves(): [number, number][] {
 		return [
-			...this.computeAllPossibleMovesTowards(MovementDirection.UP_RIGHT),
-			...this.computeAllPossibleMovesTowards(MovementDirection.DOWN_RIGHT),
-			...this.computeAllPossibleMovesTowards(MovementDirection.UP_LEFT),
-			...this.computeAllPossibleMovesTowards(MovementDirection.DOWN_LEFT)
+			...this.computeAllPossibleDiagonalMovesTowards(MovementDirection.UP_RIGHT),
+			...this.computeAllPossibleDiagonalMovesTowards(MovementDirection.DOWN_RIGHT),
+			...this.computeAllPossibleDiagonalMovesTowards(MovementDirection.UP_LEFT),
+			...this.computeAllPossibleDiagonalMovesTowards(MovementDirection.DOWN_LEFT)
 		];
 	}
 
-	private computeAllPossibleMovesTowards(direction: MovementDirection): [number, number][] {
+	private computeAllPossibleDiagonalMovesTowards(direction: MovementDirection): [number, number][] {
 		const units = this.distancesFromBoundary[direction];
 		if (units === 0) return [];
 
@@ -105,7 +113,7 @@ describe('Piece movement', () => {
 	describe('moveDiagonally', () => {
 		describe('invariants', () => {
 			it('should not modify the original piece position', () => {
-				const piece: Piece = { position: [1, 2], possibleMoves: [] };
+				const piece: ChessPiece = { position: [1, 2], possibleMoves: [] };
 				const direction = MovementDirection.UP_RIGHT;
 
 				moveDiagonally({ piece, units: 1, towards: direction });
@@ -113,7 +121,7 @@ describe('Piece movement', () => {
 			});
 
 			it('should throw an error if the resulting position is outside the board boundaries', () => {
-				const piece: Piece = { position: [7, 7], possibleMoves: [] };
+				const piece: ChessPiece = { position: [7, 7], possibleMoves: [] };
 				expect(() =>
 					moveDiagonally({ piece, units: 1, towards: MovementDirection.UP_RIGHT })
 				).toThrowError(`Move out of bounds: (8, 8) is outside the board boundaries.`);
@@ -121,7 +129,7 @@ describe('Piece movement', () => {
 		});
 
 		it('should scale the position correctly', () => {
-			const piece: Piece = { position: [1, 2], possibleMoves: [] };
+			const piece: ChessPiece = { position: [1, 2], possibleMoves: [] };
 			const newPosition = moveDiagonally({ piece, units: 1, towards: MovementDirection.UP_RIGHT });
 			expect(newPosition).toEqual([2, 3]);
 		});
