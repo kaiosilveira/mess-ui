@@ -22,7 +22,7 @@ describe('calculateHorizontalMove', () => {
 	});
 
 	it('should move horizontally 1 unit towards the right', () => {
-		const piece: ChessPiece = { position: { x: 0, y: 0 }, possibleMoves: [] };
+		const piece: ChessPiece = { position: { x: 0, y: 0 }, calculatePossibleMoves: [] };
 		const towards = MovementDirection.RIGHT;
 		const newPosition = calculateHorizontalMove({ from: piece.position, towards, units: 1 });
 
@@ -30,7 +30,7 @@ describe('calculateHorizontalMove', () => {
 	});
 
 	it('should move horizontally 2 units towards the right', () => {
-		const piece: ChessPiece = { position: { x: 0, y: 0 }, possibleMoves: [] };
+		const piece: ChessPiece = { position: { x: 0, y: 0 }, calculatePossibleMoves: [] };
 		const towards = MovementDirection.RIGHT;
 		const newPosition = calculateHorizontalMove({ from: piece.position, towards, units: 2 });
 
@@ -38,7 +38,7 @@ describe('calculateHorizontalMove', () => {
 	});
 
 	it('should move horizontally 1 unit towards the left', () => {
-		const piece: ChessPiece = { position: { x: 2, y: 0 }, possibleMoves: [] };
+		const piece: ChessPiece = { position: { x: 2, y: 0 }, calculatePossibleMoves: [] };
 		const towards = MovementDirection.LEFT;
 		const newPosition = calculateHorizontalMove({ from: piece.position, towards, units: 1 });
 
@@ -46,7 +46,7 @@ describe('calculateHorizontalMove', () => {
 	});
 
 	it('should move horizontally 2 units towards the left', () => {
-		const piece: ChessPiece = { position: { x: 2, y: 0 }, possibleMoves: [] };
+		const piece: ChessPiece = { position: { x: 2, y: 0 }, calculatePossibleMoves: [] };
 		const towards = MovementDirection.LEFT;
 		const newPosition = calculateHorizontalMove({ from: piece.position, towards, units: 2 });
 

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { Bishop } from '.';
 
 describe('Bishop', () => {
-	describe('availableMoves', () => {
+	describe('calculatePossibleMoves', () => {
 		describe('Bishop at starting position C1', () => {
 			it('should return all diagonal moves from the current position', () => {
 				/*
@@ -29,15 +29,16 @@ describe('Bishop', () => {
 
 				const bishop = new Bishop({ position: { x: 2, y: 0 } });
 
-				expect(bishop.possibleMoves).toHaveLength(7);
+				const possibleMoves = bishop.calculatePossibleMoves();
+				expect(possibleMoves).toHaveLength(7);
 
-				expect(bishop.possibleMoves).toContainEqual({ x: 3, y: 1 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 4, y: 2 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 5, y: 3 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 6, y: 4 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 7, y: 5 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 1, y: 1 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 0, y: 2 });
+				expect(possibleMoves).toContainEqual({ x: 3, y: 1 });
+				expect(possibleMoves).toContainEqual({ x: 4, y: 2 });
+				expect(possibleMoves).toContainEqual({ x: 5, y: 3 });
+				expect(possibleMoves).toContainEqual({ x: 6, y: 4 });
+				expect(possibleMoves).toContainEqual({ x: 7, y: 5 });
+				expect(possibleMoves).toContainEqual({ x: 1, y: 1 });
+				expect(possibleMoves).toContainEqual({ x: 0, y: 2 });
 			});
 		});
 
@@ -66,21 +67,22 @@ describe('Bishop', () => {
 				*/
 
 				const bishop = new Bishop({ position: { x: 4, y: 2 } });
+				const possibleMoves = bishop.calculatePossibleMoves();
 
-				expect(bishop.possibleMoves).toHaveLength(11);
-				expect(bishop.possibleMoves).toContainEqual({ x: 5, y: 3 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 6, y: 4 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 7, y: 5 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 3, y: 1 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 2, y: 0 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 3, y: 3 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 2, y: 4 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 1, y: 5 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 0, y: 6 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 5, y: 1 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 6, y: 0 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 3, y: 1 });
-				expect(bishop.possibleMoves).toContainEqual({ x: 2, y: 0 });
+				expect(possibleMoves).toHaveLength(11);
+				expect(possibleMoves).toContainEqual({ x: 5, y: 3 });
+				expect(possibleMoves).toContainEqual({ x: 6, y: 4 });
+				expect(possibleMoves).toContainEqual({ x: 7, y: 5 });
+				expect(possibleMoves).toContainEqual({ x: 3, y: 1 });
+				expect(possibleMoves).toContainEqual({ x: 2, y: 0 });
+				expect(possibleMoves).toContainEqual({ x: 3, y: 3 });
+				expect(possibleMoves).toContainEqual({ x: 2, y: 4 });
+				expect(possibleMoves).toContainEqual({ x: 1, y: 5 });
+				expect(possibleMoves).toContainEqual({ x: 0, y: 6 });
+				expect(possibleMoves).toContainEqual({ x: 5, y: 1 });
+				expect(possibleMoves).toContainEqual({ x: 6, y: 0 });
+				expect(possibleMoves).toContainEqual({ x: 3, y: 1 });
+				expect(possibleMoves).toContainEqual({ x: 2, y: 0 });
 			});
 		});
 	});

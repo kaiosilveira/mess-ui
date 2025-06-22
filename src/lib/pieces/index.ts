@@ -7,7 +7,7 @@ export interface Position {
 
 export interface ChessPiece {
 	position: Position;
-	get possibleMoves(): Position[];
+	calculatePossibleMoves(): Position[];
 }
 
 export abstract class AbstractChessPiece implements ChessPiece {
@@ -16,5 +16,5 @@ export abstract class AbstractChessPiece implements ChessPiece {
 		this.position = deps.position;
 	}
 
-	abstract get possibleMoves(): Position[];
+	abstract calculatePossibleMoves(): Position[];
 }

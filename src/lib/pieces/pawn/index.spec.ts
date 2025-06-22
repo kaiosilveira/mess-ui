@@ -22,7 +22,7 @@ export class Pawn extends AbstractChessPiece {
 		});
 	}
 
-	get possibleMoves(): Position[] {
+	calculatePossibleMoves(): Position[] {
 		return [
 			...this.diagonalMover.computeAllPossibleMovesFrom(this.position),
 			...this.verticalMover.computeAllPossibleMovesFrom(this.position)
@@ -31,7 +31,7 @@ export class Pawn extends AbstractChessPiece {
 }
 
 describe('Pawn', () => {
-	describe('possibleMoves', () => {
+	describe('calculatePossibleMoves', () => {
 		it('should return all possible moves', () => {
 			const position: Position = { x: 1, y: 1 };
 
@@ -59,7 +59,7 @@ describe('Pawn', () => {
           |---|---|---|---|---|---|---|---|
       */
 
-			const moves = pawn.possibleMoves;
+			const moves = pawn.calculatePossibleMoves();
 			expect(moves).toHaveLength(4);
 			expect(moves).toContainEqual({ x: 0, y: 2 });
 			expect(moves).toContainEqual({ x: 2, y: 2 });

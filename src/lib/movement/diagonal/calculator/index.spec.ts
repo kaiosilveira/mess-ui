@@ -6,7 +6,7 @@ import { calculateDiagonalMove } from '.';
 describe('calculateDiagonalMove', () => {
 	describe('invariants', () => {
 		it('should not modify the original piece position', () => {
-			const piece: ChessPiece = { position: { x: 1, y: 2 }, possibleMoves: [] };
+			const piece: ChessPiece = { position: { x: 1, y: 2 }, calculatePossibleMoves: [] };
 			const direction = MovementDirection.UP_RIGHT;
 
 			calculateDiagonalMove({ from: piece.position, units: 1, towards: direction });
@@ -22,7 +22,7 @@ describe('calculateDiagonalMove', () => {
 	});
 
 	it('should scale the position correctly', () => {
-		const piece: ChessPiece = { position: { x: 1, y: 2 }, possibleMoves: [] };
+		const piece: ChessPiece = { position: { x: 1, y: 2 }, calculatePossibleMoves: [] };
 		const towards = MovementDirection.UP_RIGHT;
 		const newPosition = calculateDiagonalMove({ from: piece.position, towards, units: 1 });
 

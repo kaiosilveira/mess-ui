@@ -18,7 +18,7 @@ export class Bishop extends AbstractChessPiece {
 		});
 	}
 
-	get possibleMoves(): Position[] {
+	calculatePossibleMoves(): Position[] {
 		return this.diagonalMover.computeAllPossibleMovesFrom(this.position);
 	}
 }
