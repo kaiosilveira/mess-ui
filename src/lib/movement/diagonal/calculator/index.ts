@@ -8,7 +8,7 @@ export const calculateDiagonalMove = (args: {
 }): Position => {
 	const { from: position, units, towards: direction } = args;
 
-	console.log(
+	console.debug(
 		`Calculating diagonal move from ${JSON.stringify(position)} towards ${direction} ${units} units`
 	);
 	const deltaVector: DeltaVector = (() => {

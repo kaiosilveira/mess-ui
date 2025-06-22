@@ -49,7 +49,7 @@ describe('DiagonalMovementPattern', () => {
 		expect(possibleMoves).toContainEqual({ x: 0, y: 2 });
 	});
 
-	it.only('should move only to allowed directions', () => {
+	it('should move only to allowed directions', () => {
 		/*
 						|---|---|---|---|---|---|---|---|
 					7	|   |   |   |   |   |   |   |   |
