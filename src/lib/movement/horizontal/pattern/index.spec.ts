@@ -26,12 +26,12 @@ describe('HorizontalMovementPattern', () => {
         |---|---|---|---|---|---|---|---|
     */
 
-		const bishopLikeDiagonalMovePattern = new HorizontalMovementPattern({
+		const rookLikeHorizontalMovePattern = new HorizontalMovementPattern({
 			distancePolicy: MovementUnitsPolicy.UP_TO_BOUNDARY
 		});
 
 		const fromPosition = { x: 2, y: 0 };
-		const possibleMoves = bishopLikeDiagonalMovePattern.computeAllPossibleMovesFrom(fromPosition);
+		const possibleMoves = rookLikeHorizontalMovePattern.computeAllPossibleMovesFrom(fromPosition);
 
 		expect(possibleMoves).toHaveLength(7);
 		expect(possibleMoves).toContainEqual({ x: 3, y: 0 });
@@ -66,12 +66,12 @@ describe('HorizontalMovementPattern', () => {
         |---|---|---|---|---|---|---|---|
     */
 
-		const bishopLikeDiagonalMovePattern = new HorizontalMovementPattern({
+		const kingLikeHorizontalMovePattern = new HorizontalMovementPattern({
 			distancePolicy: MovementUnitsPolicy.ONE
 		});
 
 		const fromPosition = { x: 4, y: 0 };
-		const possibleMoves = bishopLikeDiagonalMovePattern.computeAllPossibleMovesFrom(fromPosition);
+		const possibleMoves = kingLikeHorizontalMovePattern.computeAllPossibleMovesFrom(fromPosition);
 
 		expect(possibleMoves).toHaveLength(2);
 		expect(possibleMoves).toContainEqual({ x: 3, y: 0 });
