@@ -62,80 +62,42 @@ class Bishop implements Piece {
 		this.position = deps.position;
 	}
 
+	get distancesFromBoundary(): Record<MovementDirection, number> {
+		const result = {
+			[MovementDirection.DOWN_RIGHT]: Math.min(BOARD_BOUNDARY - this.position[0], this.position[1]),
+			[MovementDirection.UP_LEFT]: Math.min(this.position[0], BOARD_BOUNDARY - this.position[1]),
+			[MovementDirection.DOWN_LEFT]: Math.min(this.position[0], this.position[1]),
+			[MovementDirection.UP_RIGHT]: Math.min(
+				BOARD_BOUNDARY - this.position[0],
+				BOARD_BOUNDARY - this.position[1]
+			)
+		};
+
+		console.debug(`Bishop at (${this.position}) can move:
+			- Up Right: ${result[MovementDirection.UP_RIGHT]} units
+			- Down Right: ${result[MovementDirection.DOWN_RIGHT]} units
+			- Up Left: ${result[MovementDirection.UP_LEFT]} units
+			- Down Left: ${result[MovementDirection.DOWN_LEFT]} units`);
+
+		return result;
+	}
+
 	get possibleMoves(): [number, number][] {
-		const moves: [number, number][] = [];
+		return [
+			...this.computeAllPossibleMovesTowards(MovementDirection.UP_RIGHT),
+			...this.computeAllPossibleMovesTowards(MovementDirection.DOWN_RIGHT),
+			...this.computeAllPossibleMovesTowards(MovementDirection.UP_LEFT),
+			...this.computeAllPossibleMovesTowards(MovementDirection.DOWN_LEFT)
+		];
+	}
 
-		const distanceFromUpRightBoundary = Math.min(
-			BOARD_BOUNDARY - this.position[0],
-			BOARD_BOUNDARY - this.position[1]
+	private computeAllPossibleMovesTowards(direction: MovementDirection): [number, number][] {
+		const units = this.distancesFromBoundary[direction];
+		if (units === 0) return [];
+
+		return Array.from({ length: units }, (_, i) =>
+			moveDiagonally({ piece: this, units: i + 1, towards: direction })
 		);
-
-		console.log(
-			`Bishop at position (${this.position}) can move up right to ${distanceFromUpRightBoundary} units.`
-		);
-
-		const distanceFromDownLeftBoundary = Math.min(this.position[0], this.position[1]);
-
-		console.log(
-			`Bishop at position (${this.position}) can move down left to ${distanceFromDownLeftBoundary} units.`
-		);
-
-		const distanceFromUpLeftBoundary = Math.min(
-			this.position[0],
-			BOARD_BOUNDARY - this.position[1]
-		);
-
-		console.log(
-			`Bishop at position (${this.position}) can move up left to ${distanceFromUpLeftBoundary} units.`
-		);
-
-		const distanceFromDownRightBoundary = Math.min(
-			BOARD_BOUNDARY - this.position[0],
-			this.position[1]
-		);
-
-		console.log(
-			`Bishop at position (${this.position}) can move down right to ${distanceFromDownRightBoundary} units.`
-		);
-
-		for (let i = 1; i <= distanceFromUpRightBoundary; i++) {
-			const upRightMove = moveDiagonally({
-				piece: this,
-				units: i,
-				towards: MovementDirection.UP_RIGHT
-			});
-			if (upRightMove) moves.push(upRightMove);
-		}
-
-		for (let i = 1; i <= distanceFromDownRightBoundary; i++) {
-			const downRightMove = moveDiagonally({
-				piece: this,
-				units: i,
-				towards: MovementDirection.DOWN_RIGHT
-			});
-			if (downRightMove) moves.push(downRightMove);
-		}
-
-		for (let i = 1; i <= distanceFromUpLeftBoundary; i++) {
-			const upLeftMove = moveDiagonally({
-				piece: this,
-				units: i,
-				towards: MovementDirection.UP_LEFT
-			});
-			if (upLeftMove) moves.push(upLeftMove);
-		}
-
-		for (let i = 1; i <= distanceFromDownLeftBoundary; i++) {
-			moves.push(
-				moveDiagonally({
-					piece: this,
-					units: i,
-					towards: MovementDirection.DOWN_LEFT
-				})
-			);
-		}
-
-		return moves;
 	}
 }
 
