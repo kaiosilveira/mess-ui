@@ -12,6 +12,7 @@ interface DeltaVector {
 }
 
 const moveDiagonally = (piece: Piece, deltaVector: DeltaVector): [number, number] | undefined => {
+	console.log('Computing diagonal move with delta vector:', deltaVector);
 	if (Math.abs(deltaVector.x) !== Math.abs(deltaVector.y)) {
 		throw new Error('Invalid diagonal movement. Absolute values of x and y must be equal.');
 	}
@@ -35,18 +36,55 @@ class Bishop implements Piece {
 	get possibleMoves(): [number, number][] {
 		const moves: [number, number][] = [];
 
-		for (let i = 1; i <= BOARD_BOUNDARY - this.position[0]; i++) {
+		const distanceFromUpRightBoundary = Math.min(
+			BOARD_BOUNDARY - this.position[0],
+			BOARD_BOUNDARY - this.position[1]
+		);
+
+		console.log(
+			`Bishop at position (${this.position}) can move up right to ${distanceFromUpRightBoundary} units.`
+		);
+
+		const distanceFromDownLeftBoundary = Math.min(this.position[0], this.position[1]);
+
+		console.log(
+			`Bishop at position (${this.position}) can move down left to ${distanceFromDownLeftBoundary} units.`
+		);
+
+		const distanceFromUpLeftBoundary = Math.min(
+			this.position[0],
+			BOARD_BOUNDARY - this.position[1]
+		);
+
+		console.log(
+			`Bishop at position (${this.position}) can move up left to ${distanceFromUpLeftBoundary} units.`
+		);
+
+		const distanceFromDownRightBoundary = Math.min(
+			BOARD_BOUNDARY - this.position[0],
+			this.position[1]
+		);
+
+		console.log(
+			`Bishop at position (${this.position}) can move down right to ${distanceFromDownRightBoundary} units.`
+		);
+
+		for (let i = 1; i <= distanceFromUpRightBoundary; i++) {
 			const upRightMove = moveDiagonally(this, { x: i, y: i });
 			if (upRightMove) moves.push(upRightMove);
+		}
 
+		for (let i = 1; i <= distanceFromDownRightBoundary; i++) {
 			const downRightMove = moveDiagonally(this, { x: i, y: -i });
 			if (downRightMove) moves.push(downRightMove);
 		}
 
-		for (let i = 1; i <= this.position[0]; i++) {
+		for (let i = 1; i <= distanceFromUpLeftBoundary; i++) {
 			const upLeftMove = moveDiagonally(this, { x: -i, y: i });
 			if (upLeftMove) moves.push(upLeftMove);
+		}
 
+		for (let i = 1; i <= distanceFromDownLeftBoundary; i++) {
 			const downLeftMove = moveDiagonally(this, { x: -i, y: -i });
 			if (downLeftMove) moves.push(downLeftMove);
 		}
@@ -95,7 +133,7 @@ describe('Piece movement', () => {
 
 describe('Bishop', () => {
 	describe('availableMoves', () => {
-		describe('Bishop at starting position C1', () => {
+		describe.only('Bishop at starting position C1', () => {
 			it('should return all diagonal moves from the current position', () => {
 				/*
 						|---|---|---|---|---|---|---|---|
