@@ -5,6 +5,11 @@ export enum MovementDirection {
 	DOWN_LEFT = 'DOWN_LEFT'
 }
 
+export enum MovementUnitsPolicy {
+	ONE = 'one',
+	UP_TO_BOUNDARY = 'up_to_boundary'
+}
+
 export interface DeltaVector {
 	x: number;
 	y: number;

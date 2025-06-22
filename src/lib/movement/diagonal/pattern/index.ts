@@ -1,8 +1,19 @@
 import { calculateDiagonalMove } from '$lib/movement/diagonal/calculator';
 import { BOARD_BOUNDARY, type Position } from '$lib/pieces';
-import { MovementDirection } from '../..';
+import { MovementDirection, MovementUnitsPolicy } from '../..';
 
 export class DiagonalMovementPattern {
+	private readonly allowedDirections: MovementDirection[];
+	private readonly distancePolicy: MovementUnitsPolicy;
+
+	constructor(deps: {
+		allowedDirections: MovementDirection[];
+		distancePolicy: MovementUnitsPolicy;
+	}) {
+		this.allowedDirections = deps.allowedDirections;
+		this.distancePolicy = deps.distancePolicy;
+	}
+
 	getDistancesFromBoundary(from: Position): Record<MovementDirection, number> {
 		return {
 			[MovementDirection.DOWN_RIGHT]: Math.min(BOARD_BOUNDARY - from.x, from.y),
@@ -13,19 +24,25 @@ export class DiagonalMovementPattern {
 	}
 
 	computeAllPossibleMovesFrom(fromPosition: Position): Position[] {
-		return [
-			...this.computeAllPossibleDiagonalMovesTowards(MovementDirection.UP_RIGHT, fromPosition),
-			...this.computeAllPossibleDiagonalMovesTowards(MovementDirection.DOWN_RIGHT, fromPosition),
-			...this.computeAllPossibleDiagonalMovesTowards(MovementDirection.UP_LEFT, fromPosition),
-			...this.computeAllPossibleDiagonalMovesTowards(MovementDirection.DOWN_LEFT, fromPosition)
-		];
+		console.log(this.allowedDirections);
+		const r = this.allowedDirections.flatMap((direction) =>
+			this.computeAllPossibleDiagonalMovesTowards(direction, fromPosition)
+		);
+
+		return r;
 	}
 
 	computeAllPossibleDiagonalMovesTowards(
 		direction: MovementDirection,
 		fromPosition: Position
 	): Position[] {
-		const units = this.getDistancesFromBoundary(fromPosition)[direction];
+		let units: number;
+
+		if (this.distancePolicy === MovementUnitsPolicy.ONE) units = 1;
+		else if (this.distancePolicy === MovementUnitsPolicy.UP_TO_BOUNDARY) {
+			units = this.getDistancesFromBoundary(fromPosition)[direction];
+		} else throw new Error(`Unsupported distance policy: ${this.distancePolicy}`);
+
 		if (units === 0) return [];
 
 		return Array.from({ length: units }, (_, i) =>

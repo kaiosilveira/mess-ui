@@ -1,8 +1,17 @@
 import { describe, it, expect } from 'vitest';
 import { Bishop } from '.';
 import { DiagonalMovementPattern } from '$lib/movement/diagonal/pattern';
+import { MovementDirection, MovementUnitsPolicy } from '$lib/movement';
 
-const diagonalMover = new DiagonalMovementPattern();
+const diagonalMover = new DiagonalMovementPattern({
+	distancePolicy: MovementUnitsPolicy.UP_TO_BOUNDARY,
+	allowedDirections: [
+		MovementDirection.UP_LEFT,
+		MovementDirection.UP_RIGHT,
+		MovementDirection.DOWN_LEFT,
+		MovementDirection.DOWN_RIGHT
+	]
+});
 
 describe('Bishop', () => {
 	describe('availableMoves', () => {
