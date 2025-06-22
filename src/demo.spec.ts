@@ -11,11 +11,34 @@ interface DeltaVector {
 	y: number;
 }
 
-const moveDiagonally = (piece: Piece, deltaVector: DeltaVector): [number, number] | undefined => {
-	console.log('Computing diagonal move with delta vector:', deltaVector);
-	if (Math.abs(deltaVector.x) !== Math.abs(deltaVector.y)) {
-		throw new Error('Invalid diagonal movement. Absolute values of x and y must be equal.');
-	}
+enum MovementDirection {
+	UP_RIGHT = 'UP_RIGHT',
+	DOWN_RIGHT = 'DOWN_RIGHT',
+	UP_LEFT = 'UP_LEFT',
+	DOWN_LEFT = 'DOWN_LEFT'
+}
+
+const moveDiagonally = (args: {
+	piece: Piece;
+	units: number;
+	towards: MovementDirection;
+}): [number, number] => {
+	const { piece, units, towards: direction } = args;
+
+	const deltaVector: DeltaVector = (() => {
+		switch (direction) {
+			case MovementDirection.UP_RIGHT:
+				return { x: units, y: units };
+			case MovementDirection.DOWN_RIGHT:
+				return { x: units, y: -units };
+			case MovementDirection.UP_LEFT:
+				return { x: -units, y: units };
+			case MovementDirection.DOWN_LEFT:
+				return { x: -units, y: -units };
+			default:
+				throw new Error('Invalid movement direction');
+		}
+	})();
 
 	const [x, y] = piece.position;
 	const [resultingX, resultingY] = [x + deltaVector.x, y + deltaVector.y];
@@ -24,7 +47,13 @@ const moveDiagonally = (piece: Piece, deltaVector: DeltaVector): [number, number
 	const overflowsY = resultingY < 0 || resultingY > BOARD_BOUNDARY;
 
 	const resultOutOfBounds = overflowsX || overflowsY;
-	return resultOutOfBounds ? undefined : [resultingX, resultingY];
+	if (resultOutOfBounds) {
+		throw new Error(
+			`Move out of bounds: (${resultingX}, ${resultingY}) is outside the board boundaries.`
+		);
+	}
+
+	return [resultingX, resultingY];
 };
 
 class Bishop implements Piece {
@@ -70,23 +99,40 @@ class Bishop implements Piece {
 		);
 
 		for (let i = 1; i <= distanceFromUpRightBoundary; i++) {
-			const upRightMove = moveDiagonally(this, { x: i, y: i });
+			const upRightMove = moveDiagonally({
+				piece: this,
+				units: i,
+				towards: MovementDirection.UP_RIGHT
+			});
 			if (upRightMove) moves.push(upRightMove);
 		}
 
 		for (let i = 1; i <= distanceFromDownRightBoundary; i++) {
-			const downRightMove = moveDiagonally(this, { x: i, y: -i });
+			const downRightMove = moveDiagonally({
+				piece: this,
+				units: i,
+				towards: MovementDirection.DOWN_RIGHT
+			});
 			if (downRightMove) moves.push(downRightMove);
 		}
 
 		for (let i = 1; i <= distanceFromUpLeftBoundary; i++) {
-			const upLeftMove = moveDiagonally(this, { x: -i, y: i });
+			const upLeftMove = moveDiagonally({
+				piece: this,
+				units: i,
+				towards: MovementDirection.UP_LEFT
+			});
 			if (upLeftMove) moves.push(upLeftMove);
 		}
 
 		for (let i = 1; i <= distanceFromDownLeftBoundary; i++) {
-			const downLeftMove = moveDiagonally(this, { x: -i, y: -i });
-			if (downLeftMove) moves.push(downLeftMove);
+			moves.push(
+				moveDiagonally({
+					piece: this,
+					units: i,
+					towards: MovementDirection.DOWN_LEFT
+				})
+			);
 		}
 
 		return moves;
@@ -98,34 +144,23 @@ describe('Piece movement', () => {
 		describe('invariants', () => {
 			it('should not modify the original piece position', () => {
 				const piece: Piece = { position: [1, 2], possibleMoves: [] };
-				const deltaVector: DeltaVector = { x: 1, y: 1 };
+				const direction = MovementDirection.UP_RIGHT;
 
-				moveDiagonally(piece, deltaVector);
+				moveDiagonally({ piece, units: 1, towards: direction });
 				expect(piece.position).toEqual([1, 2]);
 			});
 
-			it('should throw an error if the absolute value of deltaVector.x is different from deltaVector.y', () => {
-				const piece: Piece = { position: [1, 2], possibleMoves: [] };
-				const deltaVector: DeltaVector = { x: 1, y: 2 };
-
-				expect(() => moveDiagonally(piece, deltaVector)).toThrowError(
-					'Invalid diagonal movement. Absolute values of x and y must be equal.'
-				);
-			});
-
-			it('should return undefined if the resulting position is outside the board boundaries', () => {
+			it('should throw an error if the resulting position is outside the board boundaries', () => {
 				const piece: Piece = { position: [7, 7], possibleMoves: [] };
-				const deltaVector: DeltaVector = { x: 1, y: 1 };
-
-				expect(moveDiagonally(piece, deltaVector)).toBeUndefined();
+				expect(() =>
+					moveDiagonally({ piece, units: 1, towards: MovementDirection.UP_RIGHT })
+				).toThrowError(`Move out of bounds: (8, 8) is outside the board boundaries.`);
 			});
 		});
 
 		it('should scale the position correctly', () => {
 			const piece: Piece = { position: [1, 2], possibleMoves: [] };
-			const deltaVector: DeltaVector = { x: 1, y: 1 };
-
-			const newPosition = moveDiagonally(piece, deltaVector);
+			const newPosition = moveDiagonally({ piece, units: 1, towards: MovementDirection.UP_RIGHT });
 			expect(newPosition).toEqual([2, 3]);
 		});
 	});
@@ -133,7 +168,7 @@ describe('Piece movement', () => {
 
 describe('Bishop', () => {
 	describe('availableMoves', () => {
-		describe.only('Bishop at starting position C1', () => {
+		describe('Bishop at starting position C1', () => {
 			it('should return all diagonal moves from the current position', () => {
 				/*
 						|---|---|---|---|---|---|---|---|
