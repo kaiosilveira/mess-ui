@@ -1,17 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { Bishop } from '.';
-import { DiagonalMovementPattern } from '$lib/movement/diagonal/pattern';
-import { MovementDirection, MovementUnitsPolicy } from '$lib/movement';
-
-const diagonalMover = new DiagonalMovementPattern({
-	distancePolicy: MovementUnitsPolicy.UP_TO_BOUNDARY,
-	allowedDirections: [
-		MovementDirection.UP_LEFT,
-		MovementDirection.UP_RIGHT,
-		MovementDirection.DOWN_LEFT,
-		MovementDirection.DOWN_RIGHT
-	]
-});
 
 describe('Bishop', () => {
 	describe('availableMoves', () => {
@@ -39,7 +27,7 @@ describe('Bishop', () => {
 						|---|---|---|---|---|---|---|---|
 				*/
 
-				const bishop = new Bishop({ position: { x: 2, y: 0 }, diagonalMover });
+				const bishop = new Bishop({ position: { x: 2, y: 0 } });
 
 				expect(bishop.possibleMoves).toHaveLength(7);
 
@@ -77,7 +65,7 @@ describe('Bishop', () => {
 						|---|---|---|---|---|---|---|---|
 				*/
 
-				const bishop = new Bishop({ position: { x: 4, y: 2 }, diagonalMover });
+				const bishop = new Bishop({ position: { x: 4, y: 2 } });
 
 				expect(bishop.possibleMoves).toHaveLength(11);
 				expect(bishop.possibleMoves).toContainEqual({ x: 5, y: 3 });

@@ -1,12 +1,21 @@
-import type { DiagonalMovementPattern } from '$lib/movement/diagonal/pattern';
+import { MovementDirection, MovementUnitsPolicy } from '$lib/movement';
+import { DiagonalMovementPattern } from '$lib/movement/diagonal/pattern';
 import { AbstractChessPiece, type Position } from '..';
 
 export class Bishop extends AbstractChessPiece {
-	private diagonalMover: DiagonalMovementPattern;
-
-	constructor(deps: { position: Position; diagonalMover: DiagonalMovementPattern }) {
+	private readonly diagonalMover: DiagonalMovementPattern;
+	constructor(deps: { position: Position }) {
 		super(deps);
-		this.diagonalMover = deps.diagonalMover;
+
+		this.diagonalMover = new DiagonalMovementPattern({
+			distancePolicy: MovementUnitsPolicy.UP_TO_BOUNDARY,
+			allowedDirections: [
+				MovementDirection.UP_LEFT,
+				MovementDirection.UP_RIGHT,
+				MovementDirection.DOWN_LEFT,
+				MovementDirection.DOWN_RIGHT
+			]
+		});
 	}
 
 	get possibleMoves(): Position[] {
