@@ -2,7 +2,7 @@ import { MovementDirection } from '$lib/movement';
 import { type Position, BOARD_BOUNDARY } from '$lib/pieces';
 
 export abstract class AbstractMovementPattern {
-	abstract computeAllPossibleMovesFrom(fromPosition: Position): Position[];
+	abstract computeAllPossibleMovesFrom(fromPosition: Position, obstacles: Position[]): Position[];
 
 	getDistancesFromBoundary(from: Position): Record<MovementDirection, number> {
 		return {

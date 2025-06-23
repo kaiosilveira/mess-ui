@@ -85,5 +85,41 @@ describe('Bishop', () => {
 				expect(possibleMoves).toContainEqual({ x: 2, y: 0 });
 			});
 		});
+
+		describe('Should consider obstacles on the path', () => {
+			it('should not be able to move if there are two pawns on (1,1) and (3,1)', () => {
+				/*
+						|---|---|---|---|---|---|---|---|
+					7	|   |   |   |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					6	|   |   |   |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					5	|   |   |   |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					4	|   |   |   |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					3	|   |   |   |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					2	|   |   |   |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					1	|   | P |   | P |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					0	|   |   | B |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+						| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+						|---|---|---|---|---|---|---|---|
+				*/
+
+				const bishop = new Bishop({ position: { x: 2, y: 2 } });
+				const possibleMoves = bishop.calculatePossibleMoves({
+					obstacles: [
+						{ x: 1, y: 1 },
+						{ x: 3, y: 1 }
+					]
+				});
+
+				expect(possibleMoves).toHaveLength(0);
+			});
+		});
 	});
 });
