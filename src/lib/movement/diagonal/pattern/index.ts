@@ -27,24 +27,57 @@ const downRightObstacleFilter = (closestObstacle: Position) => (move: Position) 
 const downLeftObstacleFilter = (closestObstacle: Position) => (move: Position) =>
 	closestObstacle && move.x > closestObstacle.x && move.y > closestObstacle?.y;
 
-const closestObjectMatchers = {
-	[MovementDirection.UP_LEFT]: upLeftMatcher,
-	[MovementDirection.UP_RIGHT]: upRightMatcher,
-	[MovementDirection.DOWN_RIGHT]: downRightMatcher,
-	[MovementDirection.DOWN_LEFT]: downLeftMatcher
-} as Record<MovementDirection, (current: Position, closest: Position) => boolean>;
+class UpLeftObstacleDetector {
+	static matchValidMove(current: Position, closest: Position): boolean {
+		return upLeftMatcher(current, closest);
+	}
 
-const invalidMovementFilters = {
-	[MovementDirection.UP_LEFT]: upLeftObstacleFilter,
-	[MovementDirection.UP_RIGHT]: upRightObstacleFilter,
-	[MovementDirection.DOWN_RIGHT]: downRightObstacleFilter,
-	[MovementDirection.DOWN_LEFT]: downLeftObstacleFilter
-} as Record<MovementDirection, (closestObstacle: Position) => (move: Position) => boolean>;
+	static filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
+		return upLeftObstacleFilter(closestObstacle);
+	}
+}
+
+class UpRightObstacleDetector {
+	static matchValidMove(current: Position, closest: Position): boolean {
+		return upRightMatcher(current, closest);
+	}
+
+	static filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
+		return upRightObstacleFilter(closestObstacle);
+	}
+}
+
+class DownRightObstacleDetector {
+	static matchValidMove(current: Position, closest: Position): boolean {
+		return downRightMatcher(current, closest);
+	}
+
+	static filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
+		return downRightObstacleFilter(closestObstacle);
+	}
+}
+
+class DownLeftObstacleDetector {
+	static matchValidMove(current: Position, closest: Position): boolean {
+		return downLeftMatcher(current, closest);
+	}
+
+	static filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
+		return downLeftObstacleFilter(closestObstacle);
+	}
+}
+
+const objectDetectors = {
+	[MovementDirection.UP_LEFT]: UpLeftObstacleDetector,
+	[MovementDirection.UP_RIGHT]: UpRightObstacleDetector,
+	[MovementDirection.DOWN_RIGHT]: DownRightObstacleDetector,
+	[MovementDirection.DOWN_LEFT]: DownLeftObstacleDetector
+} as Record<MovementDirection, typeof UpLeftObstacleDetector>;
 
 const closestObstacleReducer =
 	(direction: MovementDirection) => (closest: Position | null, current: Position) => {
 		if (!closest) return current;
-		if (closestObjectMatchers[direction](current, closest)) return current;
+		if (objectDetectors[direction].matchValidMove(current, closest)) return current;
 		return closest;
 	};
 
@@ -91,7 +124,7 @@ export class DiagonalMovementPattern extends AbstractMovementPattern {
 
 		if (closestObstacle) {
 			console.debug(`closest object in the ${direction} diagonal is`, closestObstacle);
-			result = result.filter(invalidMovementFilters[direction](closestObstacle));
+			result = result.filter(objectDetectors[direction].filterInvalidMove(closestObstacle));
 		}
 
 		return result;
