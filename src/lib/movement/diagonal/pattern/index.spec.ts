@@ -260,5 +260,96 @@ describe('DiagonalMovementPattern', () => {
 				expect(possibleMoves).toContainEqual({ x: 7, y: 5 });
 			});
 		});
+
+		describe('down-right diagonal', () => {
+			it('should consider the closest obstacle if there are many', () => {
+				/*
+						|---|---|---|---|---|---|---|---|
+					7	|   |   |   |   |   | o |   |   |
+						|---|---|---|---|---|---|---|---|
+					6	|   |   |   |   | o |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					5	|   |   |   | o |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					4	|   |   | o |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					3	|   | o |   |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					2	| B |   |   |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					1	|   | P |   |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					0	|   |   | P |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+						| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+						|---|---|---|---|---|---|---|---|
+				*/
+
+				const currentPosition = { x: 0, y: 2 };
+				const obstacles = [
+					{ x: 2, y: 0 },
+					{ x: 1, y: 1 }
+				];
+				const possibleMoves = new DiagonalMovementPattern({
+					distancePolicy: MovementUnitsPolicy.UP_TO_BOUNDARY,
+					allowedDirections: [
+						MovementDirection.DOWN_RIGHT,
+						MovementDirection.UP_LEFT,
+						MovementDirection.DOWN_LEFT,
+						MovementDirection.UP_RIGHT
+					]
+				}).computeAllPossibleMovesFrom(currentPosition, obstacles);
+
+				expect(possibleMoves).toHaveLength(5);
+				expect(possibleMoves).toContainEqual({ x: 1, y: 3 });
+				expect(possibleMoves).toContainEqual({ x: 2, y: 4 });
+				expect(possibleMoves).toContainEqual({ x: 3, y: 5 });
+				expect(possibleMoves).toContainEqual({ x: 4, y: 6 });
+				expect(possibleMoves).toContainEqual({ x: 5, y: 7 });
+			});
+
+			it('should consider a single obstacle in the down-right diagonal', () => {
+				/*
+						|---|---|---|---|---|---|---|---|
+					7	|   |   |   |   |   | o |   |   |
+						|---|---|---|---|---|---|---|---|
+					6	|   |   |   |   | o |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					5	|   |   |   | o |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					4	|   |   | o |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					3	|   | o |   |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					2	| B |   |   |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					1	|   | P |   |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+					0	|   |   |   |   |   |   |   |   |
+						|---|---|---|---|---|---|---|---|
+						| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+						|---|---|---|---|---|---|---|---|
+				*/
+
+				const currentPosition = { x: 0, y: 2 };
+				const obstacles = [{ x: 1, y: 1 }];
+				const possibleMoves = new DiagonalMovementPattern({
+					distancePolicy: MovementUnitsPolicy.UP_TO_BOUNDARY,
+					allowedDirections: [
+						MovementDirection.DOWN_RIGHT,
+						MovementDirection.UP_LEFT,
+						MovementDirection.DOWN_LEFT,
+						MovementDirection.UP_RIGHT
+					]
+				}).computeAllPossibleMovesFrom(currentPosition, obstacles);
+
+				expect(possibleMoves).toHaveLength(5);
+				expect(possibleMoves).toContainEqual({ x: 1, y: 3 });
+				expect(possibleMoves).toContainEqual({ x: 2, y: 4 });
+				expect(possibleMoves).toContainEqual({ x: 3, y: 5 });
+				expect(possibleMoves).toContainEqual({ x: 4, y: 6 });
+				expect(possibleMoves).toContainEqual({ x: 5, y: 7 });
+			});
+		});
 	});
 });
