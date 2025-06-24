@@ -87,6 +87,64 @@ describe('DiagonalMovementPattern', () => {
 	});
 
 	describe('obstacles', () => {
+		it('should compute all possible diagonal if obstacles are out of the way', () => {
+			/*
+        |---|---|---|---|---|---|---|---|
+      7	|   |   |   |   |   |   |   |   |
+        |---|---|---|---|---|---|---|---|
+      6	| o | P |   |   |   |   |   |   |
+        |---|---|---|---|---|---|---|---|
+      5	|   | o |   |   |   |   |   | o |
+        |---|---|---|---|---|---|---|---|
+      4	|   |   | o |   |   |   | o |   |
+        |---|---|---|---|---|---|---|---|
+      3	|   |   |   | o | P | o |   |   |
+        |---|---|---|---|---|---|---|---|
+      2	|   |   |   |   | B |   |   |   |
+        |---|---|---|---|---|---|---|---|
+      1	|   |   |   | o |   | o |   |   |
+        |---|---|---|---|---|---|---|---|
+      0	|   |   | o |   |   |   | o |   |
+        |---|---|---|---|---|---|---|---|
+        | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+        |---|---|---|---|---|---|---|---|
+    */
+
+			const bishopLikeDiagonalMovePattern = new DiagonalMovementPattern({
+				distancePolicy: MovementUnitsPolicy.UP_TO_BOUNDARY,
+				allowedDirections: [
+					MovementDirection.DOWN_RIGHT,
+					MovementDirection.UP_LEFT,
+					MovementDirection.DOWN_LEFT,
+					MovementDirection.UP_RIGHT
+				]
+			});
+
+			const fromPosition = { x: 4, y: 2 };
+			const obstacles = [
+				{ x: 4, y: 3 },
+				{ x: 1, y: 6 }
+			];
+
+			const possibleMoves = bishopLikeDiagonalMovePattern.computeAllPossibleMovesFrom(
+				fromPosition,
+				obstacles
+			);
+
+			expect(possibleMoves).toHaveLength(11);
+			expect(possibleMoves).toContainEqual({ x: 5, y: 3 });
+			expect(possibleMoves).toContainEqual({ x: 6, y: 4 });
+			expect(possibleMoves).toContainEqual({ x: 7, y: 5 });
+			expect(possibleMoves).toContainEqual({ x: 3, y: 1 });
+			expect(possibleMoves).toContainEqual({ x: 2, y: 0 });
+			expect(possibleMoves).toContainEqual({ x: 5, y: 1 });
+			expect(possibleMoves).toContainEqual({ x: 6, y: 0 });
+			expect(possibleMoves).toContainEqual({ x: 3, y: 3 });
+			expect(possibleMoves).toContainEqual({ x: 2, y: 4 });
+			expect(possibleMoves).toContainEqual({ x: 1, y: 5 });
+			expect(possibleMoves).toContainEqual({ x: 0, y: 6 });
+		});
+
 		describe('up-right diagonal', () => {
 			it('should consider a single obstacle in the up-right diagonal', () => {
 				/*
