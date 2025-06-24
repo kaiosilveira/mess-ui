@@ -21,7 +21,7 @@ const upRightObstacleFilter = (closestObstacle: Position) => (move: Position) =>
 const downRightObstacleFilter = (closestObstacle: Position) => (move: Position) =>
 	closestObstacle && move.x < closestObstacle.x && move.y > closestObstacle?.y;
 
-const movesBeyondReachMatchers = {
+const closestObjectMatchers = {
 	[MovementDirection.UP_LEFT]: upLeftMatcher,
 	[MovementDirection.UP_RIGHT]: upRightMatcher,
 	[MovementDirection.DOWN_RIGHT]: downRightMatcher
@@ -36,7 +36,7 @@ const invalidMovementFilter = {
 const closestObstacleReducer =
 	(direction: MovementDirection) => (closest: Position | null, current: Position) => {
 		if (!closest) return current;
-		if (movesBeyondReachMatchers[direction](current, closest)) return current;
+		if (closestObjectMatchers[direction](current, closest)) return current;
 		return closest;
 	};
 
