@@ -4,7 +4,7 @@ import { type Position } from '$lib/pieces';
 import { MovementDirection, MovementUnitsPolicy } from '../..';
 
 interface ObstacleDetector {
-	matchValidMove: (current: Position, closest: Position) => boolean;
+	matchValidMove: (current: Position, candidate: Position) => boolean;
 	filterInvalidMove: (closestObstacle: Position) => (move: Position) => boolean;
 }
 
@@ -20,8 +20,8 @@ class UpLeftObstacleDetector implements ObstacleDetector {
 }
 
 class UpRightObstacleDetector implements ObstacleDetector {
-	matchValidMove(current: Position, closest: Position): boolean {
-		return current.x < closest.x && current.y < closest.y;
+	matchValidMove(current: Position, candidate: Position): boolean {
+		return current.x < candidate.x && current.y < candidate.y;
 	}
 
 	filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
@@ -31,8 +31,8 @@ class UpRightObstacleDetector implements ObstacleDetector {
 }
 
 class DownRightObstacleDetector implements ObstacleDetector {
-	matchValidMove(current: Position, closest: Position): boolean {
-		return current.x < closest.x && current.y > closest.y;
+	matchValidMove(current: Position, candidate: Position): boolean {
+		return current.x < candidate.x && current.y > candidate.y;
 	}
 
 	filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
@@ -42,8 +42,8 @@ class DownRightObstacleDetector implements ObstacleDetector {
 }
 
 class DownLeftObstacleDetector implements ObstacleDetector {
-	matchValidMove(current: Position, closest: Position): boolean {
-		return current.x > closest.x && current.y > closest.y;
+	matchValidMove(current: Position, candidate: Position): boolean {
+		return current.x > candidate.x && current.y > candidate.y;
 	}
 
 	filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
@@ -60,10 +60,10 @@ const objectDetectors = {
 } as Record<MovementDirection, ObstacleDetector>;
 
 const closestObstacleReducer =
-	(direction: MovementDirection) => (closest: Position | null, current: Position) => {
-		if (!closest) return current;
-		if (objectDetectors[direction].matchValidMove(current, closest)) return current;
-		return closest;
+	(direction: MovementDirection) => (candidate: Position | null, current: Position) => {
+		if (!candidate) return current;
+		if (objectDetectors[direction].matchValidMove(current, candidate)) return current;
+		return candidate;
 	};
 
 export class DiagonalMovementPattern extends AbstractMovementPattern {
