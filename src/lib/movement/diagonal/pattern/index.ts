@@ -2,7 +2,7 @@ import { AbstractMovementPattern } from '$lib/movement/base/pattern';
 import { calculateDiagonalMove } from '$lib/movement/diagonal/calculator';
 import { type Position } from '$lib/pieces';
 import { MovementDirection, MovementUnitsPolicy } from '../..';
-import { ObstacleDetectorFactory } from '../../obstacle-detection';
+import { ObstacleDetectorFactory } from '../../base/obstacle-detection/factory';
 
 export class DiagonalMovementPattern extends AbstractMovementPattern {
 	private readonly allowedDirections: MovementDirection[];
