@@ -3,9 +3,6 @@ import { calculateDiagonalMove } from '$lib/movement/diagonal/calculator';
 import { type Position } from '$lib/pieces';
 import { MovementDirection, MovementUnitsPolicy } from '../..';
 
-const upRightMatcher = (current: Position, closest: Position) =>
-	current.x < closest.x && current.y < closest.y;
-
 const downRightMatcher = (current: Position, closest: Position) =>
 	current.x < closest.x && current.y > closest.y;
 
@@ -36,7 +33,7 @@ class UpLeftObstacleDetector {
 
 class UpRightObstacleDetector {
 	static matchValidMove(current: Position, closest: Position): boolean {
-		return upRightMatcher(current, closest);
+		return current.x < closest.x && current.y < closest.y;
 	}
 
 	static filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
