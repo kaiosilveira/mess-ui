@@ -12,6 +12,9 @@ const upRightMatcher = (current: Position, closest: Position) =>
 const downRightMatcher = (current: Position, closest: Position) =>
 	current.x < closest.x && current.y > closest.y;
 
+const downLeftMatcher = (current: Position, closest: Position) =>
+	current.x > closest.x && current.y > closest.y;
+
 const upLeftObstacleFilter = (closestObstacle: Position) => (move: Position) =>
 	closestObstacle && move.x > closestObstacle.x && move.y < closestObstacle?.y;
 
@@ -21,16 +24,21 @@ const upRightObstacleFilter = (closestObstacle: Position) => (move: Position) =>
 const downRightObstacleFilter = (closestObstacle: Position) => (move: Position) =>
 	closestObstacle && move.x < closestObstacle.x && move.y > closestObstacle?.y;
 
+const downLeftObstacleFilter = (closestObstacle: Position) => (move: Position) =>
+	closestObstacle && move.x > closestObstacle.x && move.y > closestObstacle?.y;
+
 const closestObjectMatchers = {
 	[MovementDirection.UP_LEFT]: upLeftMatcher,
 	[MovementDirection.UP_RIGHT]: upRightMatcher,
-	[MovementDirection.DOWN_RIGHT]: downRightMatcher
+	[MovementDirection.DOWN_RIGHT]: downRightMatcher,
+	[MovementDirection.DOWN_LEFT]: downLeftMatcher
 } as Record<MovementDirection, (current: Position, closest: Position) => boolean>;
 
 const invalidMovementFilters = {
 	[MovementDirection.UP_LEFT]: upLeftObstacleFilter,
 	[MovementDirection.UP_RIGHT]: upRightObstacleFilter,
-	[MovementDirection.DOWN_RIGHT]: downRightObstacleFilter
+	[MovementDirection.DOWN_RIGHT]: downRightObstacleFilter,
+	[MovementDirection.DOWN_LEFT]: downLeftObstacleFilter
 } as Record<MovementDirection, (closestObstacle: Position) => (move: Position) => boolean>;
 
 const closestObstacleReducer =
