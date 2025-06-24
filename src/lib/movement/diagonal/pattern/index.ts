@@ -3,56 +3,61 @@ import { calculateDiagonalMove } from '$lib/movement/diagonal/calculator';
 import { type Position } from '$lib/pieces';
 import { MovementDirection, MovementUnitsPolicy } from '../..';
 
-class UpLeftObstacleDetector {
-	static matchValidMove(current: Position, closest: Position): boolean {
+interface ObstacleDetector {
+	matchValidMove: (current: Position, closest: Position) => boolean;
+	filterInvalidMove: (closestObstacle: Position) => (move: Position) => boolean;
+}
+
+class UpLeftObstacleDetector implements ObstacleDetector {
+	matchValidMove(current: Position, closest: Position): boolean {
 		return current.x > closest.x && current.y < closest.y;
 	}
 
-	static filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
+	filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
 		return (move: Position) =>
 			closestObstacle && move.x > closestObstacle.x && move.y < closestObstacle?.y;
 	}
 }
 
-class UpRightObstacleDetector {
-	static matchValidMove(current: Position, closest: Position): boolean {
+class UpRightObstacleDetector implements ObstacleDetector {
+	matchValidMove(current: Position, closest: Position): boolean {
 		return current.x < closest.x && current.y < closest.y;
 	}
 
-	static filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
+	filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
 		return (move: Position) =>
 			closestObstacle && move.x < closestObstacle.x && move.y < closestObstacle?.y;
 	}
 }
 
-class DownRightObstacleDetector {
-	static matchValidMove(current: Position, closest: Position): boolean {
+class DownRightObstacleDetector implements ObstacleDetector {
+	matchValidMove(current: Position, closest: Position): boolean {
 		return current.x < closest.x && current.y > closest.y;
 	}
 
-	static filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
+	filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
 		return (move: Position) =>
 			closestObstacle && move.x < closestObstacle.x && move.y > closestObstacle?.y;
 	}
 }
 
-class DownLeftObstacleDetector {
-	static matchValidMove(current: Position, closest: Position): boolean {
+class DownLeftObstacleDetector implements ObstacleDetector {
+	matchValidMove(current: Position, closest: Position): boolean {
 		return current.x > closest.x && current.y > closest.y;
 	}
 
-	static filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
+	filterInvalidMove(closestObstacle: Position): (move: Position) => boolean {
 		return (move: Position) =>
 			closestObstacle && move.x > closestObstacle.x && move.y > closestObstacle?.y;
 	}
 }
 
 const objectDetectors = {
-	[MovementDirection.UP_LEFT]: UpLeftObstacleDetector,
-	[MovementDirection.UP_RIGHT]: UpRightObstacleDetector,
-	[MovementDirection.DOWN_RIGHT]: DownRightObstacleDetector,
-	[MovementDirection.DOWN_LEFT]: DownLeftObstacleDetector
-} as Record<MovementDirection, typeof UpLeftObstacleDetector>;
+	[MovementDirection.UP_LEFT]: new UpLeftObstacleDetector(),
+	[MovementDirection.UP_RIGHT]: new UpRightObstacleDetector(),
+	[MovementDirection.DOWN_RIGHT]: new DownRightObstacleDetector(),
+	[MovementDirection.DOWN_LEFT]: new DownLeftObstacleDetector()
+} as Record<MovementDirection, ObstacleDetector>;
 
 const closestObstacleReducer =
 	(direction: MovementDirection) => (closest: Position | null, current: Position) => {
