@@ -27,7 +27,7 @@ const closestObjectMatchers = {
 	[MovementDirection.DOWN_RIGHT]: downRightMatcher
 } as Record<MovementDirection, (current: Position, closest: Position) => boolean>;
 
-const invalidMovementFilter = {
+const invalidMovementFilters = {
 	[MovementDirection.UP_LEFT]: upLeftObstacleFilter,
 	[MovementDirection.UP_RIGHT]: upRightObstacleFilter,
 	[MovementDirection.DOWN_RIGHT]: downRightObstacleFilter
@@ -83,7 +83,7 @@ export class DiagonalMovementPattern extends AbstractMovementPattern {
 
 		if (closestObstacle) {
 			console.debug(`closest object in the ${direction} diagonal is`, closestObstacle);
-			result = result.filter(invalidMovementFilter[direction](closestObstacle));
+			result = result.filter(invalidMovementFilters[direction](closestObstacle));
 		}
 
 		return result;
